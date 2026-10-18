@@ -1,4 +1,6 @@
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
@@ -84,8 +86,27 @@ public class Practice {
    * @return a sorted list of all reachable vertex values
    */
   public static List<Integer> sortedReachable(Map<Integer, Set<Integer>> graph, int starting) {
-    return null;
+    List<Integer> result = new ArrayList<>();
+    if (starting == null) {
+      return result;
+    }
+    Set<Vertex<Integer>> visited = new HashSet<>();
+    Deque<Vertex<Integer>> stack = new ArrayDeque<>();
+    stack.push(starting);
+    visited.add(starting);
+    while (!stack.isEmpty()) {
+      Vertex<Integer> current = stack.pop();
+      result.add(current.data);
+      for (Vertex<Integer> neighbor : current.neighbors) {
+        if (neighbor != null && visited.add(neighbor)) {
+          stack.push(neighbor);
+        }
+      }
+    }
+    Collections.sort(result);
+    return result;
   }
+
 
   /**
    * Returns true if and only if it is possible both to reach v2 from v1 and to reach v1 from v2.
