@@ -203,6 +203,27 @@ public class Practice {
    * @return true if a person in the extended network works at the specified company, false otherwise
    */
   public static boolean hasExtendedConnectionAtCompany(Professional person, String companyName) {
+     if (person == null) {
+      return false;
+    }
+    Set<Professional> visited = new HashSet<>();
+    Deque<Professional> stack = new ArrayDeque<>();
+    stack.push(person);
+    visited.add(person);
+    while (!stack.isEmpty()) {
+      Professional current = stack.pop();
+      if (companyName != null && companyName.equals(current.getCompany())) {
+        return true;
+      }
+      if (current.getConnections() == null) {
+        continue;
+      }
+      for (Professional next : current.getConnections()) {
+        if (next != null && visited.add(next)) {
+          stack.push(next);
+        }
+      }
+    }
     return false;
   }
 
@@ -274,6 +295,16 @@ public class Practice {
    * @return an unsorted list of next moves
    */
   public static List<int[]> nextMoves(char[][] board, int[] current, int[][] directions) {
-    return null;
+     List<int[]> moves = new ArrayList<>();
+    for (int[] d : directions) {
+      int row = current[0] + d[0];
+      int col = current[1] + d[1];
+      if (row >= 0 && row < board.length
+          && col >= 0 && col < board[row].length
+          && board[row][col] != 'X') {
+        moves.add(new int[] {row, col});
+      }
+    }
+    return moves;
   }
 }
