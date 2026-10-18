@@ -146,6 +146,43 @@ public class Practice {
    * @return true if there is a two-way connection between v1 and v2, false otherwise
    */
   public static <T> boolean twoWay(Vertex<T> v1, Vertex<T> v2) {
+   if (v1 == null || v2 == null) {
+      return false;
+    }
+    boolean forward = false;
+    Set<Vertex<T>> visited = new HashSet<>();
+    Deque<Vertex<T>> stack = new ArrayDeque<>();
+    stack.push(v1);
+    visited.add(v1);
+    while (!stack.isEmpty() && !forward) {
+      Vertex<T> current = stack.pop();
+      if (current == v2) {
+        forward = true;
+      }
+      for (Vertex<T> neighbor : current.neighbors) {
+        if (neighbor != null && visited.add(neighbor)) {
+          stack.push(neighbor);
+        }
+      }
+    }
+    if (!forward) {
+      return false;
+    }
+    visited = new HashSet<>();
+    stack = new ArrayDeque<>();
+    stack.push(v2);
+    visited.add(v2);
+    while (!stack.isEmpty()) {
+      Vertex<T> current = stack.pop();
+      if (current == v1) {
+        return true;
+      }
+      for (Vertex<T> neighbor : current.neighbors) {
+        if (neighbor != null && visited.add(neighbor)) {
+          stack.push(neighbor);
+        }
+      }
+    }
     return false;
   }
 
