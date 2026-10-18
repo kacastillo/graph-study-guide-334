@@ -72,8 +72,27 @@ public class Practice {
    * @return a sorted list of all reachable vertex values by 
    */
   public static List<Integer> sortedReachable(Vertex<Integer> starting) {
-    return null;
+      List<Integer> result = new ArrayList<>();
+    if (starting == null) {
+      return result;
+    }
+    Set<Vertex<Integer>> visited = new HashSet<>();
+    Deque<Vertex<Integer>> stack = new ArrayDeque<>();
+    stack.push(starting);
+    visited.add(starting);
+    while (!stack.isEmpty()) {
+      Vertex<Integer> current = stack.pop();
+      result.add(current.data);
+      for (Vertex<Integer> neighbor : current.neighbors) {
+        if (neighbor != null && visited.add(neighbor)) {
+          stack.push(neighbor);
+        }
+      }
+    }
+    Collections.sort(result);
+    return result;
   }
+  
 
   /**
    * Returns a sorted list of all values reachable from the given starting vertex in the provided graph.
@@ -87,18 +106,22 @@ public class Practice {
    */
   public static List<Integer> sortedReachable(Map<Integer, Set<Integer>> graph, int starting) {
     List<Integer> result = new ArrayList<>();
-    if (starting == null) {
+    if (!graph.containsKey(starting)) {
       return result;
     }
-    Set<Vertex<Integer>> visited = new HashSet<>();
-    Deque<Vertex<Integer>> stack = new ArrayDeque<>();
+    Set<Integer> visited = new HashSet<>();
+    Deque<Integer> stack = new ArrayDeque<>();
     stack.push(starting);
     visited.add(starting);
     while (!stack.isEmpty()) {
-      Vertex<Integer> current = stack.pop();
-      result.add(current.data);
-      for (Vertex<Integer> neighbor : current.neighbors) {
-        if (neighbor != null && visited.add(neighbor)) {
+      int current = stack.pop();
+      result.add(current);
+      Set<Integer> neighbors = graph.get(current);
+      if (neighbors == null) {
+        continue;
+      }
+      for (Integer neighbor : neighbors) {
+        if (visited.add(neighbor)) {
           stack.push(neighbor);
         }
       }
