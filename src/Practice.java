@@ -1,3 +1,6 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,8 +28,28 @@ public class Practice {
    * @return the number of vertices with odd values reachable from the starting vertex
    */
   public static int oddVertices(Vertex<Integer> starting) {
+       if (starting == null) {
     return 0;
   }
+  int count = 0;
+  Set<Vertex<Integer>> visited = new HashSet<>();
+  Deque<Vertex<Integer>> stack = new ArrayDeque<>();
+  stack.push(starting);
+  visited.add(starting);
+  while (!stack.isEmpty()) {
+    Vertex<Integer> current = stack.pop();
+    if (current.data % 2 != 0) {
+      count++;
+    }
+    for (Vertex<Integer> neighbor : current.neighbors) {
+      if (visited.add(neighbor)) {
+        stack.push(neighbor);
+      }
+    }
+  }
+  return count;
+}
+
 
   /**
    * Returns a *sorted* list of all values reachable from the starting vertex (including the starting vertex itself).
